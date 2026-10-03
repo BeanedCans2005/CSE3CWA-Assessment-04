@@ -172,6 +172,32 @@ CREATE TABLE app_settings (
   value TEXT NOT NULL
 );
 
+-- Why the day was busy or quiet (rain, event). Evidence for explaining unusual days.
+CREATE TABLE day_context (
+  run_id            TEXT NOT NULL,
+  day               INTEGER NOT NULL,
+  weekday           INTEGER NOT NULL,
+  is_rain           INTEGER NOT NULL,
+  event_tag         TEXT,
+  expected_visitors REAL NOT NULL,
+  PRIMARY KEY (run_id, day)
+);
+
+-- Demand the store could not serve. Without this, stockouts are invisible in sales data.
+CREATE TABLE unmet_demand (
+  event_id              INTEGER PRIMARY KEY,
+  run_id                TEXT NOT NULL,
+  day                   INTEGER NOT NULL,
+  hour                  INTEGER NOT NULL,
+  customer_id           INTEGER NOT NULL REFERENCES customers(customer_id),
+  product_id            TEXT NOT NULL,
+  qty_wanted            INTEGER NOT NULL,
+  outcome               TEXT NOT NULL CHECK (outcome IN ('SUBSTITUTED','LOST')),
+  substitute_product_id TEXT,
+  lost_revenue_cents    INTEGER NOT NULL,
+  FOREIGN KEY (run_id, product_id) REFERENCES run_products(run_id, product_id)
+);
+
 CREATE INDEX idx_txn_run_day     ON transactions(run_id, day);
 CREATE INDEX idx_items_txn       ON transaction_items(txn_id);
 CREATE INDEX idx_mov_run_day     ON inventory_movements(run_id, day, product_id);
