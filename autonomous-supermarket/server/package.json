@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "calibrate": "node scripts/calibrate.js"
+  },
+  "type": "module"
+}

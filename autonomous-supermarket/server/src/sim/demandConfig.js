@@ -1,4 +1,4 @@
-const tierIds = {
+export const tierIds = {
   A: ['D01','D03','D05','S01','S04','C01','C02','C08','F01','F04','R01','R02','G09'],
   B: ['G01','G02','G03','G04','G05','G06','G07','D02','D04','D06','D07',
       'S02','S03','S05','S06','S07','C03','C04','C06','C07',
@@ -15,7 +15,7 @@ export const DEMAND_CONFIG = {
     dayNoiseSigma: 0.08,                // lognormal day-to-day variation
 
     rainProbability: 0.18,
-    rainTrafficFactorL: 0.92,
+    rainTrafficFactor: 0.92,
     rainUmbrellaFactor: 10,             // multiplies popularity of P06 on rainy days
 
     // One scheduled event: Saturday of week 3

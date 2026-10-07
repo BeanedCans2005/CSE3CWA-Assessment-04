@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+
+
 // [id, name, category, costCents, priceCents, openingQty, shelfLifeDays|null]
 const rows = [
   // ---- Grocery & Pantry (non-perishable) ----
@@ -80,13 +83,18 @@ const rows = [
   ['P07','Phone Charging Cable','Personal & Convenience',400,1200,40],
 ];
 
+const qtyFile = new URL('./openingQty.json', import.meta.url);
+const OPENING_QTY = fs.existsSync(qtyFile)
+  ? JSON.parse(fs.readFileSync(qtyFile, 'utf8'))
+  : {};
+
 export const PRODUCTS = rows.map(([id, name, category, cost, price, qty, shelf]) => ({
   product_id: id,
   name,
   category,
   unit_cost_cents: cost,
   unit_price_cents: price,
-  initial_qty: qty,
+  initial_qty: OPENING_QTY[id] ?? qty,
   is_perishable: shelf ? 1 : 0,
   shelf_life_days: shelf ?? null,
 }));
