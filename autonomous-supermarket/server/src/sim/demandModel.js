@@ -32,10 +32,13 @@ export function buildDayContext(rng, cfg, day) {
   const idx = (day - 1) % 7;
   const event = cfg.events.find(e => e.day === day) ?? null;
   const isRain = rng() < cfg.rainProbability;
+  
   let mult = cfg.weekdayFactor[idx] * Math.exp(cfg.dayNoiseSigma * normal(rng));
-  const expectedVisitors = cfg.baseVisitorsPerDay * mult;
+
   if (isRain) mult *= cfg.rainTrafficFactor;
   if (event) mult *= event.trafficFactor;
+
+  const expectedVisitors = cfg.baseVisitorsPerDay * mult;
   if (!Number.isFinite(expectedVisitors)) {
     throw new Error(`expectedVisitors is ${expectedVisitors} on day ${day}; check demandConfig keys`);
   }

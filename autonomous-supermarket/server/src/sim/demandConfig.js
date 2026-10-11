@@ -16,7 +16,7 @@ export const DEMAND_CONFIG = {
 
     rainProbability: 0.18,
     rainTrafficFactor: 0.92,
-    rainUmbrellaFactor: 10,             // multiplies popularity of P06 on rainy days
+    rainUmbrellaFactor: 4,             // multiplies popularity of P06 on rainy days
 
     // One scheduled event: Saturday of week 3
     events: [{
@@ -37,7 +37,7 @@ export const DEMAND_CONFIG = {
   missions: {
     GRAB_AND_GO: { meanLines: 1.6, categories: { 'Drinks': 4, 'Snacks & Confectionery': 3, 'Fresh & Bakery': 1.5, 'Dairy & Chilled': 1.5 } },
     LUNCH_RUN:   { meanLines: 2.8, categories: { 'Ready-to-Eat': 5, 'Drinks': 3, 'Snacks & Confectionery': 2, 'Fresh & Bakery': 1 } },
-    TOP_UP:      { meanLines: 4.5, categories: { 'Grocery & Pantry': 4, 'Dairy & Chilled': 3, 'Fresh & Bakery': 2.5, 'Household': 1, 'Drinks': 1 } },
+    TOP_UP:      { meanLines: 4.5, categories: { 'Grocery & Pantry': 4, 'Dairy & Chilled': 3, 'Fresh & Bakery': 2.5, 'Household': 0.5, 'Drinks': 1 } },
     DINNER:      { meanLines: 4.0, categories: { 'Grocery & Pantry': 3, 'Dairy & Chilled': 2, 'Fresh & Bakery': 2.5, 'Ready-to-Eat': 2.5, 'Drinks': 1 } },
     ESSENTIALS:  { meanLines: 3.2, categories: { 'Household': 4, 'Personal & Convenience': 3, 'Grocery & Pantry': 1.5 } },
     URGENT_NEED: { meanLines: 1.3, categories: { 'Personal & Convenience': 5, 'Household': 1.5, 'Drinks': 1 } },
@@ -46,13 +46,13 @@ export const DEMAND_CONFIG = {
   // Mission weights by time block (hours: morning 5-10, lunch 11-14,
   // afternoon 15-18. evening 17-20, night 21-4)
    missionMix: {
-    morning:   { GRAB_AND_GO: 60, LUNCH_RUN: 5,  TOP_UP: 15, DINNER: 0,  ESSENTIALS: 8,  URGENT_NEED: 12 },
-    lunch:     { GRAB_AND_GO: 15, LUNCH_RUN: 60, TOP_UP: 10, DINNER: 0,  ESSENTIALS: 5,  URGENT_NEED: 10 },
-    afternoon: { GRAB_AND_GO: 35, LUNCH_RUN: 10, TOP_UP: 25, DINNER: 5,  ESSENTIALS: 10, URGENT_NEED: 15 },
-    evening:   { GRAB_AND_GO: 12, LUNCH_RUN: 3,  TOP_UP: 25, DINNER: 38, ESSENTIALS: 12, URGENT_NEED: 10 },
-    late:      { GRAB_AND_GO: 40, LUNCH_RUN: 0,  TOP_UP: 10, DINNER: 10, ESSENTIALS: 10, URGENT_NEED: 30 },
+    morning:   { GRAB_AND_GO: 60, LUNCH_RUN: 5,  TOP_UP: 15, DINNER: 0,  ESSENTIALS: 4,  URGENT_NEED: 12 },
+    lunch:     { GRAB_AND_GO: 15, LUNCH_RUN: 60, TOP_UP: 10, DINNER: 0,  ESSENTIALS: 3,  URGENT_NEED: 10 },
+    afternoon: { GRAB_AND_GO: 35, LUNCH_RUN: 10, TOP_UP: 25, DINNER: 5,  ESSENTIALS: 6, URGENT_NEED: 15 },
+    evening:   { GRAB_AND_GO: 12, LUNCH_RUN: 3,  TOP_UP: 25, DINNER: 38, ESSENTIALS: 7, URGENT_NEED: 10 },
+    late:      { GRAB_AND_GO: 40, LUNCH_RUN: 0,  TOP_UP: 10, DINNER: 10, ESSENTIALS: 6, URGENT_NEED: 30 },
   },
-  weekendMissionFactor: { GRAB_AND_GO: 0.8, LUNCH_RUN: 0.6, TOP_UP: 1.6, DINNER: 1.0, ESSENTIALS: 1.5, URGENT_NEED: 1.0 },
+  weekendMissionFactor: { GRAB_AND_GO: 0.8, LUNCH_RUN: 0.6, TOP_UP: 1.6, DINNER: 1.0, ESSENTIALS: 1.2, URGENT_NEED: 1.0 },
 
   maxLines: 10,
   extraUnitProb: [0.18, 0.05],         // P(2nd unit), P(3rd unit) per line

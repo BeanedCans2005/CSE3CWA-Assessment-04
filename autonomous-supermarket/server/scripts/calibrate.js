@@ -175,10 +175,17 @@ console.table(catRows);
 // ---------- 4. opening quantities ----------
 const perishableCover = (shelf) => (shelf <= 3 ? 1.5 : shelf <= 7 ? 2.5 : shelf <= 14 ? 4 : 7);
 
+// Overstock list so the Store Brain has real slow movers to find.
+const OVERSTOCK_DAYS = { G11: 60, G12: 45, G13: 50, H06: 50, P06: 45, P07: 60, S08: 90 };
+
 function suggestQty(p, meanDaily, nonPerishCover) {
-  if (p.is_perishable) return Math.max(4, Math.ceil(meanDaily * perishableCover(p.shelf_life_days)));
-  return Math.max(10, Math.ceil(meanDaily * nonPerishCover));
+  if (p.is_perishable) {
+    return Math.max(4, Math.ceil(meanDaily * perishableCover(p.shelf_life_days)));
+  }
+  const cover = OVERSTOCK_DAYS[p.product_id] ?? nonPerishCover;
+  return Math.max(10, Math.ceil(meanDaily * cover));
 }
+
 const meanDaily = Object.fromEntries(PRODUCTS.map((p) => [p.product_id, mean(dailyUnits[p.product_id])]));
 const totalCost = (cover) =>
   PRODUCTS.reduce((s, p) => s + p.unit_cost_cents * suggestQty(p, meanDaily[p.product_id], cover), 0);
