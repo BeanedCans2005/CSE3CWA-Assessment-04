@@ -44,3 +44,10 @@ export function initDb(path) {
   `);
   return db;
 }
+
+export function openDb(path) {
+  const existed = fs.existsSync(path);
+  const db = existed ? new Database(path) : initDb(path);
+  db.pragma('foreign_keys = ON');
+  return db;
+}
