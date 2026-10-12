@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "calibrate": "node scripts/calibrate.js"
+    "calibrate": "node scripts/calibrate.js",
+    "sim": "node scripts/run-sim.js"
   },
   "type": "module"
 }
