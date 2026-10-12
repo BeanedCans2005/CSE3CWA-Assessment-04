@@ -3,5 +3,8 @@
     "calibrate": "node scripts/calibrate.js",
     "sim": "node scripts/run-sim.js"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "better-sqlite3": "^13.0.3"
+  }
 }
