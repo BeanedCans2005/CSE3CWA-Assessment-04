@@ -1,10 +1,14 @@
 {
   "scripts": {
     "calibrate": "node scripts/calibrate.js",
-    "sim": "node scripts/run-sim.js"
+    "dev": "node --watch src/index.js",
+    "sim": "node scripts/run-sim.js",
+    "mark-submitted": "node scripts/mark-submitted.js"
   },
   "type": "module",
   "dependencies": {
-    "better-sqlite3": "^13.0.3"
+    "better-sqlite3": "^13.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.3.0"
   }
 }
