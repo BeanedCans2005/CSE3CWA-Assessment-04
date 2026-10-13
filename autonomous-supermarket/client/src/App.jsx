@@ -1,122 +1,42 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react';
+import { get } from './util.jsx';
+import { Declaration, Runs, Report, Daily, Assurance } from './Pages.jsx';
 
-function App() {
-  const [count, setCount] = useState(0)
+const TABS = [['declaration', 'Model Declaration'], ['runs', 'Runs'], ['report', '60-Day Report'], ['daily', 'Daily Report'], ['assurance', 'Assurance']];
+
+export default function App() {
+  const [tab, setTab] = useState('report');
+  const [runs, setRuns] = useState([]);
+  const [submitted, setSubmitted] = useState(null);
+  const [runId, setRunId] = useState(null);
+  const [day, setDay] = useState(1);
+
+  const refresh = () => get('/runs').then((d) => { setRuns(d.runs); setSubmitted(d.submitted); setRunId((cur) => cur ?? d.submitted ?? d.runs[0]?.run_id ?? null); });
+  useEffect(() => { refresh(); }, []);                      // eslint-disable-line
+  const go = (t, d) => { if (d) setDay(d); setTab(t); window.scrollTo(0, 0); };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app">
+      <header>
+        <h1>Autonomous Supermarket — Swanston St</h1>
+        <div className="runpick">
+          <label>Run: </label>
+          <select value={runId ?? ''} onChange={(e) => setRunId(e.target.value)}>
+            {runs.map((r) => <option key={r.run_id} value={r.run_id}>{r.run_id}{r.run_id === submitted ? ' (Submitted Run)' : ''}</option>)}
+          </select>
+          {runId && runId !== submitted && <span className="badge bad">not the Submitted Run</span>}
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <nav>{TABS.map(([k, l]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>{l}</button>)}</nav>
+      </header>
+      <main>
+        {!runId ? <p>No runs yet. Run <code>npm run sim</code> in /server.</p> : <>
+          {tab === 'declaration' && <Declaration runId={runId} />}
+          {tab === 'runs' && <Runs runs={runs} submitted={submitted} runId={runId} setRunId={setRunId} refresh={refresh} />}
+          {tab === 'report' && <Report runId={runId} go={go} />}
+          {tab === 'daily' && <Daily runId={runId} day={day} setDay={setDay} />}
+          {tab === 'assurance' && <Assurance runId={runId} submitted={submitted} />}
+        </>}
+      </main>
+    </div>
+  );
 }
-
-export default App
