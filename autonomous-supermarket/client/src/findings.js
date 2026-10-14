@@ -1,8 +1,35 @@
 // Observation -> Evidence -> Diagnosis -> Business implication -> Recommendation
-
 export const FINDINGS = [
-    { title: 'Finding 1 (pending)', observation: '', evidence: '', diagnosis: '', implication: '', recommendation: ''},
-    { title: 'Finding 2 (pending)', observation: '', evidence: '', diagnosis: '', implication: '', recommendation: ''},
-    { title: 'Finding 3 (pending)', observation: '', evidence: '', diagnosis: '', implication: '', recommendation: ''},
+  {
+    title: 'Ready-to-Eat is the biggest earner but also the source of most waste and lost sales',
+    observation: `Ready-to-Eat is the largest category by revenue and gross profit, yet it accounts for most of the store's operating failures: 208 of 247 expired units, 30 of 41 sold-out events and 212 of 345 low-stock alerts.`,
+    evidence: `Revenue A$46,716.50 (19.8% of A$235,439.46) and gross profit A$27,374.50. It holds A$543.20 of the A$582.20 total write-off (93%) and A$469.10 of the A$594.50 total lost sales (79%). Worst lines: Chicken Wrap (86 units expired, A$223.60 written off, 7 sold-out events, A$175.50 lost), Sushi Pack 8pc (50 expired, A$160.00, 8 sold-out events, A$180.00 lost) and Ham & Cheese Sandwich (70 expired, A$154.00, 6 sold-out events). Croissant, a 2-day line in Fresh & Bakery, shows the same pattern (39 expired, 8 sold-out events). By weekday, 19 of the category's 29 expiry removals (66%) fall on Mondays, 15 of its 30 sold-out events (50%) fall on Thursdays and Fridays, 11 more on Mondays and Tuesdays, and only 1 on the weekend.`,
+    diagnosis: `These products have 2–3 day shelf lives and a fixed one-day lead time, so the Store Brain orders once each evening, sized from a trailing 7-day average. The weekday pattern is consistent with that single lagging estimate being the cause: stock ordered for Friday and Saturday, sized by busy weekday sales, meets the quiet weekend (about 235 customers a day against about 310 on weekdays) and expires on Monday, while the weekend sales dragging the average down appear to leave orders too small for Monday and Tuesday and for the Thursday and Friday peak. The counts are small (29 expiry removals, 30 sold-outs) and this run does not test the mechanism directly, so it should be treated as a likely explanation, not a proven one.`,
+    implication: `In dollar terms the leakage is small (A$582.20 written off plus A$594.50 of lost sales, about 0.5% of revenue combined), but it is concentrated in the category that brings in lunch-time traffic. A customer who finds the wrap sold out may not return, which this model does not capture, and waste will grow with volume.`,
+    recommendation: `Give short-life products a day-of-week demand profile (for example the average of the same weekday over recent weeks) instead of the flat 7-day average, and test a lower safety factor for weekend orders. Make Ready-to-Eat write-off and sold-out counts the two headline KPIs for the remote manager. A later option is an end-of-day markdown on units that will expire tomorrow.`,
+  },
+  {
+    title: 'Cash never constrained the store, so the model cannot yet show how much capital it really needs',
+    observation: `Operating cash was never a constraint: no replenishment order was cut back, and cash grew from A$15,000 to A$162,797.31 over the 60 days.`,
+    evidence: `0 cash-constrained orders across 59 orders (A$87,642.15 spent on 47,440 units). The lowest cash balance after any order was A$18,015.81. Opening inventory was A$24,579.85 of the A$40,000 budget, and closing inventory was A$7,932.25. Gross profit was A$131,731.91 (56.0% margin). Reconciliation: A$15,000 + A$235,439.46 revenue − A$87,642.15 replenishment = A$162,797.31.`,
+    diagnosis: `Daily takings (about A$3,924) are about 2.7 times daily purchases (about A$1,460), and sales cash arrives before each evening order, so the A$15,000 float is never tested. The cash-priority rule (fund sold-out items first, then lowest cover) therefore did not run in this Submitted Run, so this run is not evidence that it works. The closing cash is also not profit: premises, rent, fit-out, refrigeration, utilities, insurance, autonomous-store hardware and corporate overhead are all outside the model boundary.`,
+    implication: `At gross level the simulated store is strongly cash-generative, but the A$162,797.31 must not be read as a return on investment. Whether the store is viable depends on the omitted fixed costs, which this prototype cannot test.`,
+    recommendation: `Before further development, add the real fixed costs and supplier terms (minimum order sizes, delivery fees, payment terms) so that cash can become a real constraint, then run a low-opening-cash stress test (for example A$5,000) to exercise the cash-priority rule. Recalibrate demand with real operating data before judging viability.`,
+  },
+  {
+    title: 'Deliberately overstocked occasional lines were flagged as slow movers but cost little',
+    observation: `Eight lines were flagged as slow movers (25 events), mainly occasional-purchase lines opened with 45–90 days of cover. The Store Brain held reorders and none of these lines stocked out.`,
+    evidence: `Seven lines (olive oil, tea bags, instant coffee, AA batteries, compact umbrella, phone charging cable, chewing gum) held A$5,646.00 at cost at opening, 23% of the A$24,579.85 opening inventory. Slow-mover events: chewing gum 6, olive oil 4, instant coffee 4, charging cable 4, batteries 2, umbrella 2, tea 1, plus laundry liquid 2. Closing stock on Day 60 was 20 olive oil (opened with 238), 23 tea (180), 41 coffee (198), 13 batteries (156), 23 umbrellas (270), 18 cables (267) and 58 gum (190). Tea and umbrellas sold more than their opening quantity (232 against 180, and 404 against 270), so they were reordered once cover fell. All seven lines had 0 sold-out events.`,
+    diagnosis: `The slow-mover state came from the opening buying decision (45–90 days of cover against roughly 2–7 units sold per day), not from weak demand. As the lines sold down, the hold on reordering ended and they sold through. Chewing gum is the exception, with 58 units (about 26 days of sales) still on hand. Laundry liquid, opened with only 65 units, was also flagged, which suggests the 7-day average makes the rule sensitive to short-term dips in sales.`,
+    implication: `The trade-off was low-risk here because these products do not expire and none stocked out, but about a quarter of the opening budget was tied up in lines that return little per unit of stock. The model charges no holding cost, shelf-space cost or cost of capital, so the true cost of overstocking is understated.`,
+    recommendation: `Set opening cover by product tier (for example 14–21 days for occasional lines instead of 45–90), put the saving into the lines that drive revenue, and review any line still above 30 days of cover. Chewing gum is the first candidate for a range review.`,
+  },
 ];
-export const LIMITATIONS = [];
+
+export const LIMITATIONS = [
+  'Demand parameters are plausible assumptions, not calibrated to real data. Findings describe how this model behaves, not how a real store would perform.',
+  'No holding costs, fixed costs, supplier minimum orders, delivery fees or payment terms are modelled; supplier stock is unlimited and deliveries are always on time. This limits Findings 2 and 3 most.',
+  'Prices and unit costs are constant for the run and there are no markdowns. Lost sales do not affect future customer behaviour (no repeat-visit effect), which understates the cost of stock-outs in Finding 1.',
+  'The Submitted Run is a single 60-day simulation (seed 2026). Other seeds would give different figures, and no confidence intervals are reported.',
+  'The cash-priority replenishment rule was never triggered in the Submitted Run, so its behaviour is not demonstrated by this evidence.',
+];
